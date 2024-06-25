@@ -48,9 +48,7 @@ export default function Menu({ docs }: Props) {
   return (
     <div className="menu bg-base-200 text-base-content min-h-full p-8 w-[512px]">
       <div className="flex items-center gap-4 text-xl">
-        <span className="bg-base-content rounded-full size-10 flex items-center justify-center">
-          <Logo className="h-7 fill-base-200" />
-        </span>
+        <Logo className="h-10 fill-base-content" />
         <span className="font-serif font-bold">Chants</span>
       </div>
 
