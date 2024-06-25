@@ -1,40 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import data from "../../data/songs.json";
-
-const docs = data.documents.sort((a, b) =>
-  a.fields.title.stringValue.localeCompare(b.fields.title.stringValue)
-);
 ---
 
 <Layout title="Explorateur de chants - Eglise Lyon Gerland">
-  <main>
-    <div class="drawer lg:drawer-open">
-      <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content flex flex-col items-center justify-center">
-        {/* Page content here */}
-        <label
-          html-for="my-drawer-2"
-          class="btn btn-primary drawer-button lg:hidden"
-        >
-          Open drawer
-        </label>
-      </div>
-      <div class="drawer-side">
-        <label
-          html-for="my-drawer-2"
-          aria-label="close sidebar"
-          class="drawer-overlay"></label>
-        <ul class="menu bg-base-200 text-base-content min-h-full p-4 text-lg">
-          {
-            docs.map((doc) => (
-              <li class="min-w-96">
-                <a>{doc.fields.title.stringValue}</a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </div>
-  </main>
+  <main></main>
 </Layout>

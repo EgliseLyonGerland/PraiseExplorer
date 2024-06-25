@@ -1,17 +1,29 @@
 import type { Config } from "tailwindcss";
-import daisyui, { Config as DaisyUIConfig } from "daisyui";
-
+import defaultTheme from "tailwindcss/defaultTheme";
+import daisyui from "daisyui";
+import type { Config as DaisyUIConfig } from "daisyui";
+import { retro } from "daisyui/src/theming/themes";
 
 export default {
-	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
-	theme: {
-		extend: {},
-	},
-	plugins: [
-		daisyui
-	],
-	daisyui: {
-		themes: ['retro', 'night'],
-		darkTheme: 'night'
-	}
+  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue,svg}"],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ["Open Sans", ...defaultTheme.fontFamily.sans],
+        serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
+      },
+    },
+  },
+  plugins: [daisyui],
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...retro,
+          "--rounded-btn": "2rem",
+        },
+      },
+    ],
+    // darkTheme: 'night'
+  },
 } satisfies Config & { daisyui: DaisyUIConfig };
