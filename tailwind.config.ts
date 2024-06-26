@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
 import daisyui from "daisyui";
 import type { Config as DaisyUIConfig } from "daisyui";
-import { retro } from "daisyui/src/theming/themes";
+import { retro, dim } from "daisyui/src/theming/themes";
 
 export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue,svg}"],
@@ -20,11 +20,21 @@ export default {
       {
         light: {
           ...retro,
+          primary: "oklch(50% 0.131 278.93)",
+          "primary-content": "oklch(90% 0.131 278.93)",
+          "--rounded-btn": "2rem",
+          "--rounded-badge": "2rem",
+        },
+        dark: {
+          ...dim,
+          primary: "oklch(50% 0.131 278.93)",
+          "primary-content": "oklch(90% 0.131 278.93)",
           "--rounded-btn": "2rem",
           "--rounded-badge": "2rem",
         },
       },
     ],
-    // darkTheme: 'night'
+    // @ts-expect-error
+    darkTheme: false,
   },
 } satisfies Config & { daisyui: DaisyUIConfig };

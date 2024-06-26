@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import Logo from "./Logo";
 import MiniSearch from "minisearch";
 import type { Song } from "@/types";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   data: Song[];
@@ -39,8 +40,15 @@ export default function Menu({ data }: Props) {
           <span className="font-serif font-bold text-xl leading-none">
             Chants
           </span>
-          <span className="badge badge-secondary badge-sm mb-4">Beta</span>
+          <span className="badge badge-primary badge-sm mb-4">Beta</span>
         </span>
+
+        <label className="swap swap-rotate ml-auto">
+          <input type="checkbox" className="theme-controller" value="dark" />
+
+          <SunIcon className="swap-off size-6 fill-current" />
+          <MoonIcon className="swap-on size-6 fill-current" />
+        </label>
       </div>
 
       <div className="py-8 sticky top-0 bg-base-200 border-b border-base-300 mb-4 z-10">
