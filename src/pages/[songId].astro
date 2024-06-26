@@ -32,14 +32,14 @@ const lyrics = doc.fields.lyrics?.arrayValue.values || [];
       {copyright && <h3 class="opacity-40">© {copyright}</h3>}
     </div>
 
-    <div class="flex flex-col gap-4 text-lg">
+    <div class="flex flex-col gap-8 text-lg">
       {
         lyrics.map((part) => (
           <div
             class={clsx(
               "whitespace-pre-line font-serif",
               part.mapValue.fields.type.stringValue === "chorus" &&
-                "pl-4 opacity-80"
+                "pl-4 opacity-80 border-l-2 border-secondary"
             )}
           >
             {part.mapValue.fields.text.stringValue}
