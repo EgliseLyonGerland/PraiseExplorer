@@ -1,15 +1,16 @@
 ---
-import data from "../../data/songs.json";
-import Menu from "../components/Menu";
 import "@fontsource/playfair-display/500.css";
 import "@fontsource/source-sans-pro";
 import { ViewTransitions } from "astro:transitions";
+import Menu from "@/components/Menu";
+import fetchSongs from "@/libs/loadSongs";
 
 interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+const songs = await fetchSongs();
 ---
 
 <html lang="en">
@@ -34,7 +35,7 @@ const { title } = Astro.props;
           aria-label="close sidebar"
           class="drawer-overlay"></label>
 
-        <Menu docs={data.documents} client:load transition:persist />
+        <Menu data={songs} client:load transition:persist />
       </div>
     </div>
   </body>

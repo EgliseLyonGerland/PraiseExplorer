@@ -1,31 +1,18 @@
 import { useMemo, useState } from "react";
 import Logo from "./Logo";
 import MiniSearch from "minisearch";
-import extractDocumentId from "../libs/extractDocumentId";
-
-type Doc = typeof import("../../data/songs.json")["documents"][number];
+import type { Song } from "@/types";
 
 interface Props {
-  docs: Doc[];
+  data: Song[];
 }
 
-export default function Menu({ docs }: Props) {
-  const [songs, setSongs] = useState<Doc[]>(docs);
+export default function Menu({ data }: Props) {
+  const [songs, setSongs] = useState<Song[]>(data);
 
   const minisearch = useMemo(() => {
-    const index = new MiniSearch<Doc>({
+    const index = new MiniSearch<Song>({
       fields: ["title", "authors"],
-      extractField: (doc, fieldName) => {
-        switch (fieldName) {
-          case "id":
-            return doc.name;
-          case "authors":
-            return doc.fields.authors?.stringValue || "";
-          case "title":
-          default:
-            return doc.fields.title.stringValue;
-        }
-      },
       processTerm: (text) =>
         text
           .normalize("NFD")
@@ -37,14 +24,12 @@ export default function Menu({ docs }: Props) {
       },
     });
 
-    const sortedDocs = docs.sort((a, b) =>
-      a.fields.title.stringValue.localeCompare(b.fields.title.stringValue)
-    );
+    const sortedDocs = data.sort((a, b) => a.title.localeCompare(b.title));
 
     index.addAll(sortedDocs);
 
     return index;
-  }, [docs]);
+  }, [data]);
 
   return (
     <div className="menu bg-base-200 text-base-content min-h-full p-8 w-[512px]">
@@ -66,7 +51,7 @@ export default function Menu({ docs }: Props) {
           className="input w-full"
           onChange={(event) => {
             if (!event.target.value.trim()) {
-              setSongs(docs);
+              setSongs(data);
               return;
             }
 
@@ -74,7 +59,7 @@ export default function Menu({ docs }: Props) {
 
             setSongs(
               results
-                .map((result) => docs.find((doc) => doc.name === result.id))
+                .map((result) => data.find((doc) => doc.id === result.id))
                 .filter((song) => song !== undefined)
             );
           }}
@@ -83,21 +68,17 @@ export default function Menu({ docs }: Props) {
 
       <ul>
         {songs.map((song) => (
-          <li key={song.name} className="min-w-96">
+          <li key={song.id} className="min-w-96">
             <a
               className="flex flex-col items-start gap-0 px-8"
-              href={`/${extractDocumentId(song.name)}`}
+              href={`/${song.id}`}
             >
               <span className="text-lg font-serif line-clamp-1">
-                {song.fields.title.stringValue}
+                {song.title}
               </span>
 
               <span className="line-clamp-1 opacity-60">
-                {song.fields.authors?.stringValue ? (
-                  song.fields.authors.stringValue
-                ) : (
-                  <i>Aucun auteur</i>
-                )}
+                {song.authors || <i>Aucun auteur</i>}
               </span>
             </a>
           </li>
