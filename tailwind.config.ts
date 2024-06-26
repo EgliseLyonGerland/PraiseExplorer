@@ -21,6 +21,7 @@ export default {
         light: {
           ...retro,
           "--rounded-btn": "2rem",
+          "--rounded-badge": "2rem",
         },
       },
     ],

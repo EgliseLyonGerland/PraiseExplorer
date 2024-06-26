@@ -48,9 +48,14 @@ export default function Menu({ docs }: Props) {
 
   return (
     <div className="menu bg-base-200 text-base-content min-h-full p-8 w-[512px]">
-      <div className="flex items-center gap-4 text-xl">
+      <div className="flex items-center gap-4">
         <Logo className="h-10 fill-base-content" />
-        <span className="font-serif font-bold">Chants</span>
+        <span className="flex gap-2 items-center">
+          <span className="font-serif font-bold text-xl leading-none">
+            Chants
+          </span>
+          <span className="badge badge-secondary badge-sm mb-4">Beta</span>
+        </span>
       </div>
 
       <div className="py-8 sticky top-0 bg-base-200 border-b border-base-300 mb-4 z-10">
