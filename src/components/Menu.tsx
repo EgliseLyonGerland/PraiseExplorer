@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import Logo from "./Logo";
 import MiniSearch from "minisearch";
+import extractDocumentId from "../libs/extractDocumentId";
 
 type Doc = typeof import("../../data/songs.json")["documents"][number];
 
@@ -78,7 +79,10 @@ export default function Menu({ docs }: Props) {
       <ul>
         {songs.map((song) => (
           <li key={song.name} className="min-w-96">
-            <a className="flex flex-col items-start gap-0 px-8">
+            <a
+              className="flex flex-col items-start gap-0 px-8"
+              href={`/${extractDocumentId(song.name)}`}
+            >
               <span className="text-lg font-serif line-clamp-1">
                 {song.fields.title.stringValue}
               </span>
