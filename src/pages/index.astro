@@ -1,7 +1,10 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import loadSongs from "@/libs/loadSongs";
+
+const songs = await loadSongs();
+const firstSong = songs[0];
 ---
 
-<Layout title="Chants - Eglise Lyon Gerland">
-  <main></main>
-</Layout>
+<meta http-equiv="refresh" content={`0;URL=/${firstSong.id}`} />
+<Layout title="Chants - Eglise Lyon Gerland" />
