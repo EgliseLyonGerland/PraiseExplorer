@@ -3,12 +3,14 @@ import Logo from "./Logo";
 import MiniSearch from "minisearch";
 import type { Song } from "@/types";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
 
 interface Props {
   data: Song[];
+  currentSongId?: string;
 }
 
-export default function Menu({ data }: Props) {
+export default function Menu({ data, currentSongId }: Props) {
   const [songs, setSongs] = useState<Song[]>(data);
 
   const minisearch = useMemo(() => {
@@ -78,7 +80,10 @@ export default function Menu({ data }: Props) {
         {songs.map((song) => (
           <li key={song.id} className="min-w-96">
             <a
-              className="flex flex-col items-start gap-0 px-8"
+              className={clsx(
+                "flex flex-col items-start gap-0 px-8",
+                currentSongId === song.id && "active"
+              )}
               href={`/${song.id}`}
             >
               <span className="text-lg font-serif line-clamp-1">
