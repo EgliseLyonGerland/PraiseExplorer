@@ -34,7 +34,7 @@ export default function Menu({ data, currentSongId }: Props) {
 
   return (
     <>
-      <div className="py-8 sticky top-0 bg-base-200 border-b border-base-300 mb-4 z-10">
+      <div className="py-4 sm:py-8 sticky top-0 bg-base-200 border-b border-base-300 mb-4 z-10">
         <input
           id="search"
           type="text"
