@@ -87,5 +87,11 @@ const songs = await fetchSongs()
         </div>
       </div>
     </div>
+
+    <script define:vars={{ songId }}>
+      document.querySelector(`a[data-id="${songId}"]`)?.scrollIntoView({
+        block: 'center',
+      })
+    </script>
   </body>
 </html>

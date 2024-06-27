@@ -61,6 +61,7 @@ export default function Menu({ data, currentSongId }: Props) {
         {songs.map(song => (
           <li key={song.id}>
             <a
+              data-id={song.id}
               className={clsx(
                 'flex flex-col items-start gap-0 px-6 sm:px-8',
                 currentSongId === song.id && 'active',
