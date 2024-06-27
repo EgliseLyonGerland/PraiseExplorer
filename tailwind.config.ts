@@ -34,7 +34,6 @@ export default {
         },
       },
     ],
-    // @ts-expect-error Type 'boolean' is not assignable to type 'string'
-    darkTheme: false,
+    darkTheme: 'dark',
   },
 } satisfies Config & { daisyui: DaisyUIConfig }
