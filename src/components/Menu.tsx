@@ -59,7 +59,7 @@ export default function Menu({ data, currentSongId }: Props) {
 
       <ul>
         {songs.map(song => (
-          <li key={song.id} className="md:min-w-96">
+          <li key={song.id}>
             <a
               className={clsx(
                 'flex flex-col items-start gap-0 px-6 sm:px-8',
