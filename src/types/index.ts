@@ -1,10 +1,10 @@
 export interface Song {
-  id: string;
-  title: string;
-  authors?: string;
-  copyright?: string;
+  id: string
+  title: string
+  authors?: string
+  copyright?: string
   lyrics?: {
-    text: string;
-    type: "chorus" | "verse";
-  }[];
+    text: string
+    type: 'chorus' | 'verse'
+  }[]
 }

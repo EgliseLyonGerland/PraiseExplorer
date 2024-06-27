@@ -1,23 +1,23 @@
 ---
-import clsx from "clsx";
-import Layout from "@/layouts/Layout.astro";
-import fetchSongs from "@/libs/loadSongs";
+import clsx from 'clsx'
+import Layout from '@/layouts/Layout.astro'
+import fetchSongs from '@/libs/loadSongs'
 
 export async function getStaticPaths() {
-  const songs = await fetchSongs();
+  const songs = await fetchSongs()
 
   return songs.map((song) => ({
     params: { songId: song.id },
-  }));
+  }))
 }
 
-const { songId } = Astro.params;
+const { songId } = Astro.params
 
-const songs = await fetchSongs();
-const song = songs.find((doc) => doc.id === songId);
+const songs = await fetchSongs()
+const song = songs.find((doc) => doc.id === songId)
 
 if (!song) {
-  return Astro.redirect("/");
+  return Astro.redirect('/')
 }
 ---
 
@@ -25,7 +25,7 @@ if (!song) {
   <div class="p-4 sm:p-8 md:p-12">
     <div class="space-y-2 mb-8">
       <h1 class="font-serif text-3xl sm:text-4xl">{song.title}</h1>
-      <h2 class="opacity-60 text-xl">{song.authors || "Aucun auteur"}</h2>
+      <h2 class="opacity-60 text-xl">{song.authors || 'Aucun auteur'}</h2>
       {song.copyright && <h3 class="opacity-40">© {song.copyright}</h3>}
     </div>
 
@@ -35,14 +35,14 @@ if (!song) {
           ? song.lyrics.map((part) => (
               <div
                 class={clsx(
-                  "whitespace-pre-line font-serif",
-                  part.type === "chorus" && "pl-4 border-l-2 border-primary"
+                  'whitespace-pre-line font-serif',
+                  part.type === 'chorus' && 'pl-4 border-l-2 border-primary',
                 )}
               >
                 {part.text}
               </div>
             ))
-          : "Aucune parole"
+          : 'Aucune parole'
       }
     </div>
   </div>

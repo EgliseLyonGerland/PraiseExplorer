@@ -1,9 +1,9 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import loadSongs from "@/libs/loadSongs";
+import Layout from '@/layouts/Layout.astro'
+import loadSongs from '@/libs/loadSongs'
 
-const songs = await loadSongs();
-const firstSong = songs[0];
+const songs = await loadSongs()
+const firstSong = songs[0]
 ---
 
 <meta http-equiv="refresh" content={`0;URL=/${firstSong.id}`} />

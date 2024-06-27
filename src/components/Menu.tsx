@@ -1,36 +1,36 @@
-import { useMemo, useState } from "react";
-import MiniSearch from "minisearch";
-import type { Song } from "@/types";
-import clsx from "clsx";
+import { useMemo, useState } from 'react'
+import MiniSearch from 'minisearch'
+import clsx from 'clsx'
+import type { Song } from '@/types'
 
 interface Props {
-  data: Song[];
-  currentSongId?: string;
+  data: Song[]
+  currentSongId?: string
 }
 
 export default function Menu({ data, currentSongId }: Props) {
-  const [songs, setSongs] = useState<Song[]>(data);
+  const [songs, setSongs] = useState<Song[]>(data)
 
   const minisearch = useMemo(() => {
     const index = new MiniSearch<Song>({
-      fields: ["title", "authors"],
-      processTerm: (text) =>
+      fields: ['title', 'authors'],
+      processTerm: text =>
         text
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
+          .normalize('NFD')
+          .replace(/[\u0300-\u036F]/g, '')
           .toLocaleLowerCase(),
       searchOptions: {
         prefix: true,
         boost: { title: 2 },
       },
-    });
+    })
 
-    const sortedDocs = data.sort((a, b) => a.title.localeCompare(b.title));
+    const sortedDocs = data.sort((a, b) => a.title.localeCompare(b.title))
 
-    index.addAll(sortedDocs);
+    index.addAll(sortedDocs)
 
-    return index;
-  }, [data]);
+    return index
+  }, [data])
 
   return (
     <>
@@ -42,28 +42,28 @@ export default function Menu({ data, currentSongId }: Props) {
           className="input w-full"
           onChange={(event) => {
             if (!event.target.value.trim()) {
-              setSongs(data);
-              return;
+              setSongs(data)
+              return
             }
 
-            const results = minisearch.search(event.target.value);
+            const results = minisearch.search(event.target.value)
 
             setSongs(
               results
-                .map((result) => data.find((doc) => doc.id === result.id))
-                .filter((song) => song !== undefined)
-            );
+                .map(result => data.find(doc => doc.id === result.id))
+                .filter(song => song !== undefined),
+            )
           }}
         />
       </div>
 
       <ul>
-        {songs.map((song) => (
+        {songs.map(song => (
           <li key={song.id} className="md:min-w-96">
             <a
               className={clsx(
-                "flex flex-col items-start gap-0 px-6 sm:px-8",
-                currentSongId === song.id && "active"
+                'flex flex-col items-start gap-0 px-6 sm:px-8',
+                currentSongId === song.id && 'active',
               )}
               href={`/${song.id}`}
             >
@@ -79,5 +79,5 @@ export default function Menu({ data, currentSongId }: Props) {
         ))}
       </ul>
     </>
-  );
+  )
 }

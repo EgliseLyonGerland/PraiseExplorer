@@ -1,25 +1,25 @@
 ---
-import "@fontsource/playfair-display/500.css";
-import "@fontsource/source-sans-pro";
-import { ViewTransitions } from "astro:transitions";
-import Menu from "@/components/Menu";
-import fetchSongs from "@/libs/loadSongs";
-import Logo from "@/components/Logo";
+import '@fontsource/playfair-display/500.css'
+import '@fontsource/source-sans-pro'
+import { ViewTransitions } from 'astro:transitions'
+import Menu from '@/components/Menu'
+import fetchSongs from '@/libs/loadSongs'
+import Logo from '@/components/Logo'
 import {
   MoonIcon,
   SunIcon,
   Bars2Icon,
   XMarkIcon,
-} from "@heroicons/react/24/outline";
+} from '@heroicons/react/24/outline'
 
 interface Props {
-  title: string;
+  title: string
 }
 
-const { songId } = Astro.params;
-const { title } = Astro.props;
+const { songId } = Astro.params
+const { title } = Astro.props
 
-const songs = await fetchSongs();
+const songs = await fetchSongs()
 ---
 
 <html lang="en">
