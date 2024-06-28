@@ -27,7 +27,7 @@ function TitleSlide({ song }: { song: Song }) {
 
 function LyricSlide({ lines }: { lines: string[] }) {
   return (
-    <div className="text-[min(4vw,50px)] font-serif">
+    <div className="text-[min(6vw,50px)] font-serif flex flex-col gap-1">
       {lines.map((line, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <div key={index} className="font-serif pl-4 -indent-4">

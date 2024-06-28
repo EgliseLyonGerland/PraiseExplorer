@@ -3,8 +3,10 @@ import clsx from 'clsx'
 import Layout from '@/layouts/Layout.astro'
 import fetchSongs from '@/libs/loadSongs'
 import Presentation from '@/components/Presentation'
-import { PlayIcon } from '@heroicons/react/24/outline'
+import PlayButton from '@/components/PlayButton'
 import prepareLyrics from '@/libs/prepareLyrics'
+import SongDetails from '@/components/SongDetails'
+import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 export async function getStaticPaths() {
   const songs = await fetchSongs()
@@ -24,60 +26,70 @@ if (!song) {
 }
 ---
 
-<script>
-  import { isPresentationStarted } from '@/libs/store'
-
-  class AstroPlayButton extends HTMLElement {
-    constructor() {
-      super()
-
-      const button = this.querySelector('button')
-      button?.addEventListener('click', () => {
-        isPresentationStarted.set(true)
-      })
-    }
-  }
-
-  customElements.define('astro-play-button', AstroPlayButton)
-</script>
-
 <Layout title={song.title}>
-  <astro-play-button
-    slot="header"
-    class="tooltip tooltip-left"
-    data-tip="Lancer le diaporama"
-  >
-    <button class="btn btn-primary btn-circle">
-      <PlayIcon className="h-6" />
-    </button>
-  </astro-play-button>
-
-  <div class="px-4 sm:px-8 md:px-12 mb-12">
-    <div class="space-y-2 mb-8">
-      <h1 class="font-serif text-3xl sm:text-4xl">{song.title}</h1>
-      <h2 class="opacity-60 text-xl">{song.authors || 'Aucun auteur'}</h2>
-      {song.copyright && <h3 class="opacity-40">© {song.copyright}</h3>}
-    </div>
-
-    <div class="flex flex-col gap-6 sm:gap-8 text-md sm:text-lg tracking-wide">
-      {
-        song.lyrics
-          ? prepareLyrics(song.lyrics).map(({ type, lines }) => (
-              <div>
-                {lines.map((line) => (
-                  <div
-                    class={clsx(
-                      'font-serif pl-4 -indent-4',
-                      type === 'chorus' && 'pl-8',
-                    )}
-                  >
-                    {line}
+  <div class="drawer drawer-end 2xl:drawer-open">
+    <input id="song-details" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content">
+      <div class="p-4 sm:p-8 md:p-12 md:py-8">
+        <div class="flex gap-4 justify-between">
+          <div class="space-y-2 mb-8">
+            <h1 class="font-serif text-3xl sm:text-4xl">{song.title}</h1>
+            <h2 class="opacity-60 text-xl">{song.authors || 'Aucun auteur'}</h2>
+          </div>
+          <label class="btn btn-circle btn-ghost 2xl:hidden" for="song-details">
+            <InformationCircleIcon className="h-8" />
+          </label>
+        </div>
+        <div
+          class="flex flex-col gap-6 sm:gap-8 text-md sm:text-lg tracking-wide mb-[50vh]"
+        >
+          {
+            song.lyrics
+              ? prepareLyrics(song.lyrics).map(({ type, lines }) => (
+                  <div>
+                    {lines.map((line) => (
+                      <div
+                        class={clsx(
+                          'font-serif pl-4 -indent-4 sm:tracking-wide',
+                          type === 'chorus' && 'pl-8',
+                        )}
+                      >
+                        {line}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ))
-          : 'Aucune parole'
-      }
+                ))
+              : 'Aucune parole'
+          }
+        </div>
+      </div>
+
+      <div
+        class="ml-auto p-4 lg:p-8 fixed bottom-0 inset-x-0 flex justify-end 2xl:hidden"
+      >
+        <PlayButton client:only="react" />
+      </div>
+    </div>
+    <div class="drawer-side z-50">
+      <label
+        for="song-details"
+        aria-label="close sidebar"
+        class="drawer-overlay"></label>
+
+      <div class="2xl:p-8 w-full 2xl:w-[30vw] max-w-[600px] max-2xl:h-full">
+        <div
+          class="menu bg-neutral text-neutral-content min-h-full p-8 2xl:rounded-3xl relative"
+        >
+          <label
+            class="btn btn-circle btn-ghost absolute top-6 right-8 2xl:hidden"
+            for="song-details"
+          >
+            <XMarkIcon className="h-6" />
+          </label>
+
+          <SongDetails song={song} client:load />
+        </div>
+      </div>
     </div>
 
     <Presentation song={song} client:only="react" />

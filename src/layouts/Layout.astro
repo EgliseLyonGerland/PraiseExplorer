@@ -7,9 +7,9 @@ import Menu from '@/components/Menu'
 import fetchSongs from '@/libs/loadSongs'
 import Logo from '@/components/Logo'
 import {
-  MoonIcon,
-  SunIcon,
-  Bars2Icon,
+  // MoonIcon,
+  // SunIcon,
+  ArrowLeftIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 
@@ -36,25 +36,26 @@ const songs = await fetchSongs()
     <ViewTransitions />
   </head>
   <body>
-    <div class="drawer lg:drawer-open">
+    <div class="drawer xl:drawer-open">
       <input id="sidenav" type="checkbox" class="drawer-toggle" />
+
       <div class="drawer-content">
-        <div class="sticky flex top-0 p-4">
-          <label for="sidenav" class="btn drawer-button lg:hidden btn-circle">
-            <Bars2Icon className="h-6" />
+        <div class="sticky top-0 z-20 xl:hidden p-2">
+          <label
+            for="sidenav"
+            class="btn backdrop-blur drawer-button btn-circle btn-ghost"
+          >
+            <ArrowLeftIcon className="h-6" />
           </label>
-          <div class="ml-auto">
-            <slot name="header" />
-          </div>
         </div>
 
         <slot />
       </div>
-      <div class="drawer-side">
+      <div class="drawer-side z-30">
         <label for="sidenav" aria-label="close sidebar" class="drawer-overlay"
         ></label>
         <div
-          class="menu bg-base-200 text-base-content min-h-full p-4 md:p-8 w-full lg:w-[420px] xl:w-[512px]"
+          class="menu bg-base-200 text-base-content min-h-full p-4 md:p-8 lg:w-[420px] 2xl:w-[512px]"
         >
           <div class="flex items-center gap-4">
             <Logo className="h-10 fill-base-content" />
@@ -73,7 +74,7 @@ const songs = await fetchSongs()
             </label> -->
             <label
               for="sidenav"
-              class="btn btn-ghost drawer-button lg:hidden btn-circle"
+              class="btn btn-ghost drawer-button xl:hidden btn-circle"
             >
               <XMarkIcon className="h-6" />
             </label>
