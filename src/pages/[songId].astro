@@ -1,7 +1,7 @@
 ---
 import clsx from 'clsx'
 import Layout from '@/layouts/Layout.astro'
-import fetchSongs from '@/libs/loadSongs'
+import getSongs from '@/libs/getSongs'
 import Presentation from '@/components/Presentation'
 import PlayButton from '@/components/PlayButton'
 import prepareLyrics from '@/libs/prepareLyrics'
@@ -9,7 +9,7 @@ import SongDetails from '@/components/SongDetails'
 import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 export async function getStaticPaths() {
-  const songs = await fetchSongs()
+  const songs = await getSongs()
 
   return songs.map((song) => ({
     params: { songId: song.id },
@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 
 const { songId } = Astro.params
 
-const songs = await fetchSongs()
+const songs = await getSongs()
 const song = songs.find((doc) => doc.id === songId)
 
 if (!song) {

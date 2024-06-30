@@ -8,7 +8,8 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "load-data": "export $(cat .env | xargs) && gcloud storage cp $STORAGE_OBJECT_URL src/data"
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",

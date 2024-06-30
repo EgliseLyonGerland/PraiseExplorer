@@ -29,14 +29,39 @@ env:
   # BUILD_PATH: subfolder
 
 jobs:
-  build:
-    name: Build
+  load-data:
+    name: Load data from storage
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v4
-      - name: Install, build, and upload your site
-        uses: withastro/action@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+          create_credentials_file: true
+      - run: npm run load-data
+        env:
+          STORAGE_OBJECT_URL: '${{ secrets.STORAGE_OBJECT_URL }}'
+      - uses: actions/cache@v4
+        with:
+          path: src/data
+          key: data-${{ github.run_id }}
+
+  build:
+    name: Build
+    needs: load-data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: src/data
+          key: data-${{ github.run_id }}
+      - uses: withastro/action@v2
 
   deploy:
     name: Deploy

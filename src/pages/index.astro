@@ -1,8 +1,8 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import loadSongs from '@/libs/loadSongs'
+import getSongs from '@/libs/getSongs'
 
-const songs = await loadSongs()
+const songs = await getSongs()
 const firstSong = songs[0]
 ---
 
