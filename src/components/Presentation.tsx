@@ -75,12 +75,24 @@ function PresentationInner({ song }: Props) {
     }
   }
 
-  const handleKeyPress = (event: KeyboardEvent) => {
-    if (event.key === ' ') {
-      event.stopPropagation()
-      event.preventDefault()
-      next()
+  const handleKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case 'ArrowUp':
+        prev()
+        break
+      case ' ':
+      case 'ArrowDown':
+        next()
+        break
+      case 'Escape':
+        close()
+        break
+      default:
+        return
     }
+
+    event.stopPropagation()
+    event.preventDefault()
   }
 
   const handleFullscrrenChange = () => {
@@ -91,7 +103,7 @@ function PresentationInner({ song }: Props) {
 
   useEventListener('cancel', close, dialogRef)
   useEventListener('click', handleDialogClick, dialogRef)
-  useEventListener('keypress', handleKeyPress)
+  useEventListener('keydown', handleKeyDown)
   useEventListener('fullscreenchange', handleFullscrrenChange, documentRef)
 
   useEffect(() => {
