@@ -2,8 +2,10 @@ import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/24/o
 import { useStore } from '@nanostores/react'
 import { useEffect, useRef, useState } from 'react'
 import { useEventListener } from 'usehooks-ts'
+import TextIncreaseIcon from './icons/TextIncrease'
+import TextDecreaseIcon from './icons/TextDecrease'
 import type { Song } from '@/types'
-import { isPresentationStarted } from '@/libs/store'
+import { fontSize$, isPresentationStarted$ } from '@/libs/store'
 import prepareLyrics from '@/libs/prepareLyrics'
 
 interface Props {
@@ -25,12 +27,16 @@ function TitleSlide({ song }: { song: Song }) {
   )
 }
 
-function LyricSlide({ lines }: { lines: string[] }) {
+function LyricSlide({ lines, fontSize }: { lines: string[], fontSize: number }) {
   return (
     <div className="text-[min(6vw,50px)] font-serif flex flex-col gap-1">
       {lines.map((line, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={index} className="font-serif pl-4 -indent-4">
+        <div
+          // eslint-disable-next-line react/no-array-index-key
+          key={index}
+          className="font-serif pl-4 -indent-4"
+          style={{ fontSize: `${fontSize}em` }}
+        >
           {line}
         </div>
       ))}
@@ -42,6 +48,7 @@ const defaultLyrics = [] as const
 
 function PresentationInner({ song }: Props) {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const fontSize = useStore(fontSize$)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const documentRef = useRef(document)
 
@@ -51,7 +58,7 @@ function PresentationInner({ song }: Props) {
     if (document.fullscreenEnabled) {
       document.exitFullscreen()
     }
-    isPresentationStarted.set(false)
+    isPresentationStarted$.set(false)
   }
 
   const prev = () => {
@@ -121,39 +128,72 @@ function PresentationInner({ song }: Props) {
   return (
     <dialog
       ref={dialogRef}
-      className="relative modal bg-base-200 w-screen h-screen m-0 overscroll-none items-start justify-start block"
+      className="relative modal bg-base-300 w-screen h-screen m-0 overscroll-none items-start justify-start block"
     >
       <div className="mx-auto py-[5vh] px-[5vw] max-w-screen-2xl tracking-wide pointer-events-none">
         {currentSlide === 0
           ? (<TitleSlide song={song} />)
-          : (<LyricSlide lines={lyrics[currentSlide - 1].lines} />)}
+          : (<LyricSlide lines={lyrics[currentSlide - 1].lines} fontSize={fontSize} />)}
       </div>
 
-      <div className="fixed inset-x-0 bottom-[4vh] flex items-center justify-center gap-[5vw]">
+      <div className="fixed inset-x-0 bottom-[4vh] flex items-center justify-center gap-4">
+        <div
+          className="join"
+        >
+          <button
+            type="button"
+            className="tooltip btn btn-neutral join-item"
+            data-tip="Diminuer la taille du texte"
+            disabled={currentSlide === 0}
+            onClick={(event) => {
+              event.stopPropagation()
+              event.preventDefault()
+              fontSize$.set(fontSize - 0.1)
+            }}
+          >
+            <TextDecreaseIcon className="h-6" />
+          </button>
+          <button
+            type="button"
+            className="tooltip btn btn-neutral join-item"
+            data-tip="Augmenter la taille du texte"
+            disabled={currentSlide === 0}
+            onClick={(event) => {
+              event.stopPropagation()
+              event.preventDefault()
+              fontSize$.set(fontSize + 0.1)
+            }}
+          >
+            <TextIncreaseIcon className="h-6" />
+          </button>
+        </div>
+
         <div className="join">
           <button
             type="button"
             className="tooltip btn btn-neutral join-item"
             data-tip="Précédent"
+            disabled={currentSlide === 0}
             onClick={(event) => {
               event.stopPropagation()
               event.preventDefault()
               prev()
             }}
           >
-            <ChevronUpIcon className="h-6"></ChevronUpIcon>
+            <ChevronUpIcon className="h-6" />
           </button>
           <button
             type="button"
             className="tooltip btn btn-neutral join-item"
             data-tip="Suivant"
+            disabled={currentSlide === lyrics.length}
             onClick={(event) => {
               event.stopPropagation()
               event.preventDefault()
               next()
             }}
           >
-            <ChevronDownIcon className="h-6"></ChevronDownIcon>
+            <ChevronDownIcon className="h-6" />
           </button>
           <button
             type="button"
@@ -165,7 +205,7 @@ function PresentationInner({ song }: Props) {
               close()
             }}
           >
-            <XMarkIcon className="h-6"></XMarkIcon>
+            <XMarkIcon className="h-6" />
           </button>
         </div>
       </div>
@@ -174,7 +214,7 @@ function PresentationInner({ song }: Props) {
 }
 
 export default function Presentation({ song }: Props) {
-  const isStarted = useStore(isPresentationStarted)
+  const isStarted = useStore(isPresentationStarted$)
 
   return isStarted ? <PresentationInner song={song} /> : null
 }
