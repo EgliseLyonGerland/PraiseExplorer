@@ -2,7 +2,7 @@ import { PlayIcon } from '@heroicons/react/24/outline'
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { useState } from 'react'
 import clsx from 'clsx'
-import { isPresentationStarted } from '@/libs/store'
+import { isPresentationStarted$ } from '@/libs/store'
 
 export default function PlayButton() {
   const [reduce, setReduce] = useState(false)
@@ -23,7 +23,7 @@ export default function PlayButton() {
         <motion.button
           className="flex items-center justify-center btn size-auto btn-ghost p-0 gap-0"
           onClick={() => {
-            isPresentationStarted.set(true)
+            isPresentationStarted$.set(true)
           }}
         >
           <span className="size-[4em] flex items-center justify-center"><PlayIcon className="h-6" /></span>

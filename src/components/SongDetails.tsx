@@ -1,7 +1,7 @@
 import { PlayIcon } from '@heroicons/react/24/outline'
 import Preview from './Preview'
 import type { Song } from '@/types'
-import { isPresentationStarted } from '@/libs/store'
+import { isPresentationStarted$ } from '@/libs/store'
 
 interface Props {
   song: Song
@@ -17,7 +17,7 @@ export default function SongDetails({ song }: Props) {
           type="button"
           className="btn btn-primary"
           onClick={() => {
-            isPresentationStarted.set(true)
+            isPresentationStarted$.set(true)
           }}
         >
           <PlayIcon className="h-6" />
