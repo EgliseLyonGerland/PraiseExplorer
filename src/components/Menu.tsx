@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import MiniSearch from 'minisearch'
 import clsx from 'clsx'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import type { Song } from '@/types'
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 export default function Menu({ data, currentSongId }: Props) {
   const [songs, setSongs] = useState<Song[]>(data)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const minisearch = useMemo(() => {
     const index = new MiniSearch<Song>({
@@ -35,26 +37,41 @@ export default function Menu({ data, currentSongId }: Props) {
   return (
     <>
       <div className="py-4 sm:py-8 sticky top-0 bg-base-200 border-b border-base-300 mb-4 z-10">
-        <input
-          id="search"
-          type="text"
-          placeholder="Rechercher"
-          className="input w-full"
-          onChange={(event) => {
-            if (!event.target.value.trim()) {
-              setSongs(data)
-              return
-            }
+        <label className="input w-full flex items-center">
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="Rechercher"
+            className="grow peer"
+            onChange={(event) => {
+              if (!event.target.value.trim()) {
+                setSongs(data)
+                return
+              }
 
-            const results = minisearch.search(event.target.value)
+              const results = minisearch.search(event.target.value)
 
-            setSongs(
-              results
-                .map(result => data.find(doc => doc.id === result.id))
-                .filter(song => song !== undefined),
-            )
-          }}
-        />
+              setSongs(
+                results
+                  .map(result => data.find(doc => doc.id === result.id))
+                  .filter(song => song !== undefined),
+              )
+            }}
+          />
+          <button
+            type="button"
+            className="btn btn-ghost btn-circle btn-sm peer-placeholder-shown:hidden"
+            onClick={() => {
+              if (inputRef.current) {
+                inputRef.current.value = ''
+                setSongs(data)
+                inputRef.current.focus()
+              }
+            }}
+          >
+            <XMarkIcon className="h-5" />
+          </button>
+        </label>
       </div>
 
       <ul>
