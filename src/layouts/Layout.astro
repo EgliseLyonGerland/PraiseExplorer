@@ -9,16 +9,17 @@ import Logo from '@/components/Logo'
 import {
   // MoonIcon,
   // SunIcon,
-  ArrowLeftIcon,
+  Bars2Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 
 interface Props {
   title: string
+  menuOpened?: boolean
 }
 
 const { songId } = Astro.params
-const { title } = Astro.props
+const { title, menuOpened } = Astro.props
 
 const songs = await getSongs()
 ---
@@ -37,7 +38,12 @@ const songs = await getSongs()
   </head>
   <body>
     <div class="drawer xl:drawer-open">
-      <input id="sidenav" type="checkbox" class="drawer-toggle" />
+      <input
+        id="sidenav"
+        type="checkbox"
+        class="drawer-toggle"
+        checked={menuOpened}
+      />
 
       <div class="drawer-content">
         <div class="sticky top-0 z-20 xl:hidden p-2">
@@ -45,7 +51,7 @@ const songs = await getSongs()
             for="sidenav"
             class="btn backdrop-blur drawer-button btn-circle btn-ghost"
           >
-            <ArrowLeftIcon className="h-6" />
+            <Bars2Icon className="h-6" />
           </label>
         </div>
 
@@ -58,11 +64,11 @@ const songs = await getSongs()
           class="menu bg-base-200 text-base-content min-h-full p-4 md:p-8 w-full max-w-[420px] lg:w-[420px] 2xl:w-[512px]"
         >
           <div class="flex items-center gap-4">
-            <Logo className="h-10 fill-base-content" />
+            <a href="/"><Logo className="h-10 fill-base-content" /></a>
             <span class="flex gap-2 items-center">
-              <span class="font-serif font-bold text-xl leading-none">
+              <a href="/" class="font-serif font-bold text-xl leading-none">
                 Chants
-              </span>
+              </a>
               <span class="badge badge-primary badge-sm mb-4">Beta</span>
             </span>
             <span class="flex-1"></span>
