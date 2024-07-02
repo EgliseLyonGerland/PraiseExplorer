@@ -1,15 +1,24 @@
 import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useStore } from '@nanostores/react'
-import { useEffect, useRef, useState } from 'react'
-import { useEventListener } from 'usehooks-ts'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useDebounceCallback, useEventListener } from 'usehooks-ts'
+import { motion } from 'framer-motion'
 import TextIncreaseIcon from './icons/TextIncrease'
 import TextDecreaseIcon from './icons/TextDecrease'
 import type { Song } from '@/types'
 import { fontSize$, isPresentationStarted$ } from '@/libs/store'
 import prepareLyrics from '@/libs/prepareLyrics'
 
-interface Props {
-  song: Song
+function isTouchDevice() {
+  return (('ontouchstart' in window)
+    || (navigator.maxTouchPoints > 0))
+}
+
+function isCursorInBound(event: MouseEvent, element: HTMLElement) {
+  const { clientX, clientY } = event
+  const { left, right, top, bottom } = element.getBoundingClientRect()
+
+  return clientX >= left && clientX <= right && clientY >= top && clientY <= bottom
 }
 
 function TitleSlide({ song }: { song: Song }) {
@@ -19,8 +28,7 @@ function TitleSlide({ song }: { song: Song }) {
       {song.authors && <h2 className="text-[4vmin]">{song.authors}</h2>}
       {song.copyright && (
         <h3 className="text-[3vmin] opacity-60">
-          ©
-          {song.copyright}
+          {`© ${song.copyright}`}
         </h3>
       )}
     </div>
@@ -46,11 +54,25 @@ function LyricSlide({ lines, fontSize }: { lines: string[], fontSize: number }) 
 
 const defaultLyrics = [] as const
 
+interface Props {
+  song: Song
+}
+
 function PresentationInner({ song }: Props) {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [controlsShown, setControlsShown] = useState(isTouchDevice())
   const fontSize = useStore(fontSize$)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const documentRef = useRef(document)
+  const controlsRef = useRef<HTMLDivElement>(null)
+
+  const hideControls = useDebounceCallback(useCallback((event: MouseEvent) => {
+    const inBounds = controlsRef.current && isCursorInBound(event, controlsRef.current)
+
+    if (!inBounds) {
+      setControlsShown(false)
+    }
+  }, []), 3000)
 
   const lyrics = song.lyrics ? prepareLyrics(song.lyrics) : defaultLyrics!
 
@@ -108,10 +130,23 @@ function PresentationInner({ song }: Props) {
     }
   }
 
+  const handleMouseMove = (event: MouseEvent) => {
+    if (isTouchDevice()) {
+      return
+    }
+
+    hideControls(event)
+
+    if (!controlsShown) {
+      setControlsShown(true)
+    }
+  }
+
   useEventListener('cancel', close, dialogRef)
   useEventListener('click', handleDialogClick, dialogRef)
   useEventListener('keydown', handleKeyDown)
   useEventListener('fullscreenchange', handleFullscrrenChange, documentRef)
+  useEventListener('mousemove', handleMouseMove)
 
   useEffect(() => {
     async function open() {
@@ -130,85 +165,93 @@ function PresentationInner({ song }: Props) {
       ref={dialogRef}
       className="relative modal bg-base-300 w-screen h-screen m-0 overscroll-none items-start justify-start block"
     >
-      <div className="mx-auto py-[5vh] px-[5vw] max-w-screen-2xl tracking-wide pointer-events-none">
+      <div className="mx-auto py-[5vh] px-8 max-w-screen-2xl tracking-wide pointer-events-none">
         {currentSlide === 0
           ? (<TitleSlide song={song} />)
           : (<LyricSlide lines={lyrics[currentSlide - 1].lines} fontSize={fontSize} />)}
       </div>
 
-      <div className="fixed inset-x-0 bottom-[4vh] flex items-center justify-center gap-4">
+      <motion.div
+        animate={{ opacity: Number(controlsShown) }}
+        className="fixed inset-x-0 bottom-[4vh] flex items-center justify-center "
+      >
         <div
-          className="join"
+          className="flex gap-4"
+          ref={controlsRef}
         >
-          <button
-            type="button"
-            className="tooltip btn btn-neutral join-item"
-            data-tip="Diminuer la taille du texte"
-            disabled={currentSlide === 0}
-            onClick={(event) => {
-              event.stopPropagation()
-              event.preventDefault()
-              fontSize$.set(fontSize - 0.1)
-            }}
+          <div
+            className="join shadow-xl"
           >
-            <TextDecreaseIcon className="h-6" />
-          </button>
-          <button
-            type="button"
-            className="tooltip btn btn-neutral join-item"
-            data-tip="Augmenter la taille du texte"
-            disabled={currentSlide === 0}
-            onClick={(event) => {
-              event.stopPropagation()
-              event.preventDefault()
-              fontSize$.set(fontSize + 0.1)
-            }}
-          >
-            <TextIncreaseIcon className="h-6" />
-          </button>
-        </div>
+            <button
+              type="button"
+              className="lg:tooltip btn btn-neutral join-item"
+              data-tip="Diminuer la taille du texte"
+              disabled={currentSlide === 0}
+              onClick={(event) => {
+                event.stopPropagation()
+                event.preventDefault()
+                fontSize$.set(fontSize - 0.1)
+              }}
+            >
+              <TextDecreaseIcon className="h-6" />
+            </button>
+            <button
+              type="button"
+              className="lg:tooltip btn btn-neutral join-item"
+              data-tip="Augmenter la taille du texte"
+              disabled={currentSlide === 0}
+              onClick={(event) => {
+                event.stopPropagation()
+                event.preventDefault()
+                fontSize$.set(fontSize + 0.1)
+              }}
+            >
+              <TextIncreaseIcon className="h-6" />
+            </button>
+          </div>
 
-        <div className="join">
-          <button
-            type="button"
-            className="tooltip btn btn-neutral join-item"
-            data-tip="Précédent"
-            disabled={currentSlide === 0}
-            onClick={(event) => {
-              event.stopPropagation()
-              event.preventDefault()
-              prev()
-            }}
-          >
-            <ChevronUpIcon className="h-6" />
-          </button>
-          <button
-            type="button"
-            className="tooltip btn btn-neutral join-item"
-            data-tip="Suivant"
-            disabled={currentSlide === lyrics.length}
-            onClick={(event) => {
-              event.stopPropagation()
-              event.preventDefault()
-              next()
-            }}
-          >
-            <ChevronDownIcon className="h-6" />
-          </button>
-          <button
-            type="button"
-            className="tooltip btn btn-neutral join-item"
-            data-tip="Arrêter la présentation"
-            onClick={(event) => {
-              event.stopPropagation()
-              event.preventDefault()
-              close()
-            }}
-          >
-            <XMarkIcon className="h-6" />
-          </button>
+          <div className="join shadow-xl">
+            <button
+              type="button"
+              className="lg:tooltip btn btn-neutral join-item"
+              data-tip="Précédent"
+              disabled={currentSlide === 0}
+              onClick={(event) => {
+                event.stopPropagation()
+                event.preventDefault()
+                prev()
+              }}
+            >
+              <ChevronUpIcon className="h-6" />
+            </button>
+            <button
+              type="button"
+              className="lg:tooltip btn btn-neutral join-item"
+              data-tip="Suivant"
+              disabled={currentSlide === lyrics.length}
+              onClick={(event) => {
+                event.stopPropagation()
+                event.preventDefault()
+                next()
+              }}
+            >
+              <ChevronDownIcon className="h-6" />
+            </button>
+            <button
+              type="button"
+              className="lg:tooltip btn btn-neutral join-item"
+              data-tip="Arrêter la présentation"
+              onClick={(event) => {
+                event.stopPropagation()
+                event.preventDefault()
+                close()
+              }}
+            >
+              <XMarkIcon className="h-6" />
+            </button>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </dialog>
   )
 }
