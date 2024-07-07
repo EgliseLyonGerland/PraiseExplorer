@@ -163,7 +163,7 @@ function PresentationInner({ song }: Props) {
   return (
     <dialog
       ref={dialogRef}
-      className="relative modal bg-base-300 w-screen h-screen m-0 overscroll-none items-start justify-start block"
+      className="relative modal bg-base-100 w-screen h-screen m-0 overscroll-none items-start justify-start block"
     >
       <div className="mx-auto py-[5vh] px-8 max-w-screen-2xl tracking-wide pointer-events-none">
         {currentSlide === 0

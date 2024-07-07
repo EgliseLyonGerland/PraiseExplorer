@@ -9,7 +9,7 @@ import Logo from '@/components/Logo'
 import {
   // MoonIcon,
   // SunIcon,
-  Bars2Icon,
+  Bars3BottomLeftIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 
@@ -34,6 +34,11 @@ const songs = await getSongs()
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <style is:global>
+      .drawer-toggle:checked ~ .drawer-side > .drawer-overlay {
+        @apply backdrop-blur;
+      }
+    </style>
     <ViewTransitions />
   </head>
   <body>
@@ -50,26 +55,29 @@ const songs = await getSongs()
           <label
             for="sidenav"
             class="btn backdrop-blur drawer-button btn-circle btn-ghost"
+            aria-label="Ouvrir le menu"
           >
-            <Bars2Icon className="h-6" />
+            <Bars3BottomLeftIcon className="h-6" />
           </label>
         </div>
 
         <slot />
       </div>
       <div class="drawer-side z-30">
-        <label for="sidenav" aria-label="close sidebar" class="drawer-overlay"
+        <label for="sidenav" aria-label="Fermer le menu" class="drawer-overlay"
         ></label>
         <div
-          class="menu bg-base-200 text-base-content min-h-full p-4 md:p-8 w-full max-w-[420px] lg:w-[420px] 2xl:w-[512px]"
+          class="menu bg-base-200 text-base-content min-h-full p-4 w-full max-w-[420px] lg:w-[420px] 2xl:w-[512px]"
         >
-          <div class="flex items-center gap-4">
-            <a href="/"><Logo className="h-10 fill-base-content" /></a>
+          <div class="flex items-center gap-4 my-4">
+            <a href="/"><Logo className="h-10 fill-base-100" /></a>
             <span class="flex gap-2 items-center">
               <a href="/" class="font-serif font-bold text-xl leading-none">
                 Chants
               </a>
-              <span class="badge badge-primary badge-sm mb-4">Beta</span>
+              <span class="badge bg-primary text-primary-content badge-sm mb-4"
+                >Beta</span
+              >
             </span>
             <span class="flex-1"></span>
             <!-- <label class="swap swap-rotate ml-auto">

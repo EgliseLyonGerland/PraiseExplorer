@@ -36,7 +36,7 @@ export default function Menu({ data, currentSongId }: Props) {
 
   return (
     <>
-      <div className="py-4 sm:py-8 sticky top-0 bg-base-200 border-b border-base-300 mb-4 z-10">
+      <div className="py-4 sm:py-6 sticky top-0 bg-base-200 border-b border-base-content/10 mb-4 z-10">
         <label className="input w-full flex items-center">
           <input
             ref={inputRef}
@@ -80,16 +80,16 @@ export default function Menu({ data, currentSongId }: Props) {
             <a
               data-id={song.id}
               className={clsx(
-                'flex flex-col items-start gap-0 px-6 sm:px-8',
+                'flex flex-col items-start gap-0 px-2 sm:px-4 rounded-lg lg:text-lg',
                 currentSongId === song.id && 'active',
               )}
               href={`/${song.id}`}
             >
-              <span className="sm:text-lg font-serif line-clamp-1">
+              <span className="font-serif line-clamp-1">
                 {song.title}
               </span>
 
-              <span className="line-clamp-1 opacity-60">
+              <span className="line-clamp-1 opacity-40">
                 {song.authors || <i>Aucun auteur</i>}
               </span>
             </a>
