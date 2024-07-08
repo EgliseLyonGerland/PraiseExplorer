@@ -21,7 +21,11 @@ interface Props {
 const { songId } = Astro.params
 const { title, menuOpened } = Astro.props
 
-const songs = await getSongs()
+const songs = (await getSongs()).map(({ id, title, authors }) => ({
+  id,
+  title,
+  authors,
+}))
 ---
 
 <html lang="en">
